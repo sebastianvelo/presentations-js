@@ -1,3 +1,5 @@
+import Utils from "../utils/Utils";
+
 namespace WidgetStyleSheet {
     interface Declarations {
         [key: string]: string;
@@ -20,25 +22,23 @@ namespace WidgetStyleSheet {
         keyframes?: Keyframe[];
     }
 
-    const isUpperCase = (letter: string): boolean => letter === letter.toUpperCase();
-    const camelCaseToKebabCase = (camelCase: string): string => camelCase.split('').map(letter => isUpperCase(letter) ? `-${letter.toLowerCase()}` : letter).join('');
 
-    export const getDeclaration = (key: string, value: string) => `${camelCaseToKebabCase(key)}: ${value};`;
-    export const getDeclarations = (declarations: Declarations) => Object.entries(declarations).map(([key, value]) => getDeclaration(key, value)).join('\n\t');
-    export const getDeclarationBlock = (declarations: Declarations) => `{\n\t${getDeclarations(declarations)}\n}`;
+    const getDeclaration = (key: string, value: string) => value ? `${Utils.camelCaseToKebabCase(key)}: ${value};` : '';
+    const getDeclarations = (declarations: Declarations) => Object.entries(declarations).filter(d => d[1]).map(([key, value]) => getDeclaration(key, value)).join('\n\t');
+    const getDeclarationBlock = (declarations: Declarations) => `{\n\t${getDeclarations(declarations)}\n}`;
 
-    export const getRule = (rule: Rule) => `${rule.selector} ${getDeclarationBlock(rule.declarations)}`;
-    export const getRules = (rules: Rule[]) => rules.map(getRule).join('\n');
+    const getRule = (rule: Rule) => `${rule.selector} ${getDeclarationBlock(rule.declarations)}`;
+    const getRules = (rules: Rule[]) => rules.map(getRule).join('\n');
 
-    export const getBreakpoint = (key: string, value: number) => value ? `(${key}: ${value}px)` : '';
-    export const getMinWidth = (minWidth: number) => getBreakpoint("min-width", minWidth);
-    export const getMaxWidth = (maxWidth: number) => getBreakpoint("max-width", maxWidth);
-    export const getRange = (minWidth?: number, maxWidth?: number) => `${getMinWidth(minWidth)} ${minWidth && maxWidth ? 'and' : ''} ${getMaxWidth(maxWidth)}`;
+    const getBreakpoint = (key: string, value: number) => value ? `(${key}: ${value}px)` : '';
+    const getMinWidth = (minWidth: number) => getBreakpoint("min-width", minWidth);
+    const getMaxWidth = (maxWidth: number) => getBreakpoint("max-width", maxWidth);
+    const getRange = (minWidth?: number, maxWidth?: number) => `${getMinWidth(minWidth)} ${minWidth && maxWidth ? 'and' : ''} ${getMaxWidth(maxWidth)}`;
 
-    export const getKeyframe = (keyframe: Keyframe) => `\n@keyframes ${keyframe.name} {\n${getRules(keyframe.steps)}\n}\n`;
-    export const getKeyframes = (keyframes?: Keyframe[]) => keyframes ? keyframes.map(getKeyframe).join('\n') : '';
+    const getKeyframe = (keyframe: Keyframe) => `\n@keyframes ${keyframe.name} {\n${getRules(keyframe.steps)}\n}\n`;
+    const getKeyframes = (keyframes?: Keyframe[]) => keyframes ? keyframes.map(getKeyframe).join('\n') : '';
 
-    export const getScreen = (screen: WidgetStyleScreen) => {
+    const getScreen = (screen: WidgetStyleScreen) => {
         const body = `${getRules(screen.rules)} ${getKeyframes(screen.keyframes)}`;
         if (!screen.maxWidth && !screen.minWidth) return body;
         return `@media ${getRange(screen.minWidth, screen.maxWidth)} {

@@ -16,18 +16,6 @@ declare namespace WidgetStyleSheet {
         rules: Rule[];
         keyframes?: Keyframe[];
     }
-    export const getDeclaration: (key: string, value: string) => string;
-    export const getDeclarations: (declarations: Declarations) => string;
-    export const getDeclarationBlock: (declarations: Declarations) => string;
-    export const getRule: (rule: Rule) => string;
-    export const getRules: (rules: Rule[]) => string;
-    export const getBreakpoint: (key: string, value: number) => string;
-    export const getMinWidth: (minWidth: number) => string;
-    export const getMaxWidth: (maxWidth: number) => string;
-    export const getRange: (minWidth?: number, maxWidth?: number) => string;
-    export const getKeyframe: (keyframe: Keyframe) => string;
-    export const getKeyframes: (keyframes?: Keyframe[]) => string;
-    export const getScreen: (screen: WidgetStyleScreen) => string;
     export const getStyleSheet: (screens: WidgetStyleScreen[]) => string;
     export const getStyleTag: (id: string, screens: WidgetStyleScreen[]) => HTMLStyleElement;
     export {};

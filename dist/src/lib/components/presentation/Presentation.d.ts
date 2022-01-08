@@ -1,16 +1,18 @@
 declare class Presentation extends HTMLElement {
     private state;
     private setState;
+    private getPresentationSelector;
+    private getSlideSelector;
     private getAnimationName;
-    private getSelector;
-    private getBackground;
+    private getAnimation;
     private getPresentationStyle;
     private getSlideStyle;
     private getKeyframes;
-    private getRootStyle;
-    private setStyle;
+    private getStyle;
+    private appendStyle;
+    private getCounter;
     private modifyChild;
-    modifyChildren(active: number): void;
+    private modifyChildren;
     connectedCallback(): void;
 }
 export default Presentation;

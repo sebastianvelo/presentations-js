@@ -1,9 +1,16 @@
+import { rootStyleId } from "../shared/RootStyle";
 import WidgetStyleSheet from "../style/WidgetStyleSheet";
 
 const defineStyles = () => {
-    const style = WidgetStyleSheet.getStyleTag("root-style", [
+    const style = WidgetStyleSheet.getStyleTag(rootStyleId, [
         {
             rules: [
+                {
+                    selector: 'widget-row',
+                    declarations: {
+                        display: 'flex'
+                    }
+                },
                 {
                     selector: 'widget-presentation',
                     declarations: {

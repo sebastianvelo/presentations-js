@@ -1,4 +1,9 @@
+import { getRootStyle } from "../../shared/RootStyle";
+import StyleAttributes from "../../shared/StyleAttributes";
+import StyleUnits from "../../shared/StyleUnits";
 import WidgetStyleSheet from "../../style/WidgetStyleSheet";
+import StyleUtils from "../../utils/StyleUtils";
+import Utils from "../../utils/Utils";
 
 interface PresentationState {
     id: string,
@@ -11,48 +16,46 @@ class Presentation extends HTMLElement {
 
     private state: PresentationState;
 
-    private setState(): void {
+    private setState = (): void => {
         this.state = {
             id: this.getAttribute("id"),
             style: {
-                bg: this.getAttribute("bg"),
-                width: this.getAttribute("w"),
-                height: this.getAttribute("h"),
+                bg: this.getAttribute(StyleAttributes.Background),
+                width: this.getAttribute(StyleAttributes.Width),
+                height: this.getAttribute(StyleAttributes.Height),
             },
             animation: {
-                side: this.getAttribute("side") ?? 'left'
+                side: this.getAttribute(StyleAttributes.AnimationSide)
             },
             transition: {
-                name: this.getAttribute("transition"),
-                duration: this.getAttribute("duration") ?? "0.5",
+                name: this.getAttribute(StyleAttributes.TransitionName),
+                duration: this.getAttribute(StyleAttributes.TransitionDuration) ?? "0.5",
             }
         }
     }
 
-    private getSelector = (): string => `#${this.state.id}`
+    private getPresentationSelector = (): string => Utils.getIDSelector(this.state.id);
+
+    private getSlideSelector = (): string => `${this.getPresentationSelector()} widget-slide[active]`;
 
     private getAnimationName = (): string => `${this.state.transition.name}-${this.state.id}`;
 
-    private getBackground = (): string => {
-        if (this.state.style.bg.startsWith("http") || this.state.style.bg.startsWith("."))
-            return `url("${this.state.style.bg}")`;
-        return this.state.style.bg;
-    }
+    private getAnimation = (): string => `${this.getAnimationName()} ${this.state.transition.duration}s`;
 
     private getPresentationStyle = (): WidgetStyleSheet.Rule => ({
-        selector: this.getSelector(),
+        selector: this.getPresentationSelector(),
         declarations: {
-            background: this.getBackground(),
-            width: `${this.state.style.width}px`,
-            height: `${this.state.style.height}px`,
+            background: StyleUtils.getBackground(this.state.style.bg),
+            width: StyleUtils.getValueUnit(this.state.style.width, StyleUnits.PX),
+            height: StyleUtils.getValueUnit(this.state.style.height, StyleUnits.PX),
         }
     })
 
     private getSlideStyle = (): WidgetStyleSheet.Rule[] => [
         {
-            selector: `${this.getSelector()} widget-slide[active]`,
+            selector: this.getSlideSelector(),
             declarations: {
-                animation: `${this.getAnimationName()} ${this.state.transition.duration}s`
+                animation: this.getAnimation(),
             }
         }
     ]
@@ -77,7 +80,7 @@ class Presentation extends HTMLElement {
         }
     ]
 
-    private getRootStyle = () => WidgetStyleSheet.getStyleTag(`presentation-style-${this.getAttribute("id")}`, [
+    private getStyle = (): string => WidgetStyleSheet.getStyleSheet([
         {
             rules: [
                 this.getPresentationStyle(),
@@ -87,12 +90,16 @@ class Presentation extends HTMLElement {
         }
     ]);
 
-    private appendStyle() {
-        document.head.appendChild(this.getRootStyle());
+    private appendStyle = (): void => getRootStyle().append(this.getStyle());
+
+
+    private getCounter = (active: number) => {
+        return `${active + 1}/${this.children.length}`;
     }
 
-    private modifyChild(index: number, active: number) {
+    private modifyChild = (index: number, active: number): void => {
         const child = this.children.item(index);
+
         if (index === active)
             child.setAttribute("active", "true");
         else
@@ -101,11 +108,11 @@ class Presentation extends HTMLElement {
         child.addEventListener("click", () => this.modifyChildren(index + 1));
     }
 
-    modifyChildren(active: number) {
+    private modifyChildren = (active: number): void => {
         [...this.children].forEach((_, i) => {
             this.modifyChild(i, active);
         });
-        this.replaceChildren(...this.children);
+        this.replaceChildren(...this.children, this.getCounter(active));
     }
 
     connectedCallback() {
