@@ -1,20 +1,28 @@
-declare class Presentation extends HTMLElement {
-    private state;
-    private setState;
-    private getPresentationSelector;
-    private getSlideSelector;
-    private getAnimationName;
-    private getAnimation;
-    private getPresentationStyle;
-    private getSlideStyle;
-    private getKeyframes;
-    private getStyle;
-    private appendStyle;
+import Widget from "../../widget/WIdget";
+export interface PresentationState {
+    id: string;
+    active: number;
+    hideControls: boolean;
+    autoplay: number;
+    style: {
+        [key: string]: string;
+    };
+    animation: {
+        [key: string]: string;
+    };
+    transition: {
+        [key: string]: string;
+    };
+}
+declare class Presentation extends Widget<PresentationState> {
+    protected setState: () => void;
+    protected getStyle: () => string;
+    protected setContent: () => void;
+    protected onInit: () => void;
     private getBody;
+    private setSlide;
     private getSlidesCount;
     private changeSlide;
     private getControl;
-    private setContent;
-    connectedCallback(): void;
 }
 export default Presentation;

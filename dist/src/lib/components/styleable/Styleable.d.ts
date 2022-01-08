@@ -3,7 +3,6 @@ declare abstract class Styleable extends HTMLElement {
     private setState;
     private getPosition;
     private getStyle;
-    private appendStyle;
     connectedCallback(): void;
 }
 export default Styleable;

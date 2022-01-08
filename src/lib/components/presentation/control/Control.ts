@@ -1,27 +1,23 @@
+import UnstyledWidget from "../../../widget/UnstyledWidget";
+
 interface ControlState {
     next: boolean;
 }
 
-class Control extends HTMLElement {
+class Control extends UnstyledWidget<ControlState> {
 
-    private state: ControlState;
-
-    private setState = (): void => {
+    protected setState = (): void => {
         this.state = {
             next: this.getAttribute("next") !== null,
         }
     }
 
-    private setContent = (): void => {
+    protected setContent = (): void => {
         const control = document.createElement("button");
         control.textContent = this.state.next ? ">" : "<";
         this.append(control);
     }
 
-    connectedCallback() {
-        this.setState();
-        this.setContent();
-    }
 }
 
 export default Control;

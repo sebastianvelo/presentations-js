@@ -1,4 +1,4 @@
-import { getRootStyle } from "../../shared/RootStyle";
+import { appendStyle, getRootStyle } from "../../shared/RootStyle";
 import StyleAttributes from "../../shared/StyleAttributes";
 import StyleUnits from "../../shared/StyleUnits";
 import WidgetStyleSheet from "../../style/WidgetStyleSheet";
@@ -66,17 +66,13 @@ abstract class Styleable extends HTMLElement {
         }
     ]);
 
-
-    private appendStyle() {
-        getRootStyle().append(this.getStyle());
-    }
-
     connectedCallback() {
-        this.setState();
-        this.appendStyle();
-        this.setAttribute("id", this.state.id);
+        setTimeout(() => {
+            this.setState();
+            appendStyle(this.getStyle());
+            this.setAttribute("id", this.state.id);
+        });
     }
-
 
 }
 

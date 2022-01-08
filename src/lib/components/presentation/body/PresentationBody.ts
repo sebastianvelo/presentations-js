@@ -1,24 +1,25 @@
+import UnstyledWidget from "../../../widget/UnstyledWidget";
+import Widget from "../../../widget/WIdget";
+
 interface PresentationBodyState {
     slideActive?: number;
 }
 
-class PresentationBody extends HTMLElement {
-    private state: PresentationBodyState;
+class PresentationBody extends UnstyledWidget<PresentationBodyState> {
 
     static get observedAttributes() {
         return ["slide"];
     }
 
-    private init = () => {
-        this.setState();
-        this.modifyChildren(this.state.slideActive);
-    }
-
-    private setState = () => {
+    protected setState = () => {
         this.state = {
             slideActive: +this.getAttribute("slide")
         }
     };
+
+    protected onInit = () => {
+        this.modifyChildren(this.state.slideActive);
+    }
 
     private modifyChild = (index: number, slideActive: number): void => {
         const child = this.children.item(index);
@@ -28,22 +29,18 @@ class PresentationBody extends HTMLElement {
             child.removeAttribute("active");
     };
 
-    private modifyChildren = (active: number): void => {
-        setTimeout(() => {
-            [...this.children].forEach((_, i) => {
-                this.modifyChild(i, active);
-            });
-            this.replaceChildren(...this.children);
-        })
+    private modifyChildren = (slideActive: number): void => {
+        [...this.children].forEach((_, i) => {
+            this.modifyChild(i, slideActive);
+        });
+        this.replaceChildren(...this.children);
     };
 
     attributeChangedCallback() {
-        this.init();
+        this.setState();
+        this.onInit();
     }
 
-    connectedCallback() {
-        this.init();
-    }
 }
 
 export default PresentationBody;

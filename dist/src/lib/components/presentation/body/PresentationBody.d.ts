@@ -1,11 +1,13 @@
-declare class PresentationBody extends HTMLElement {
-    private state;
+import UnstyledWidget from "../../../widget/UnstyledWidget";
+interface PresentationBodyState {
+    slideActive?: number;
+}
+declare class PresentationBody extends UnstyledWidget<PresentationBodyState> {
     static get observedAttributes(): string[];
-    private init;
-    private setState;
+    protected setState: () => void;
+    protected onInit: () => void;
     private modifyChild;
     private modifyChildren;
     attributeChangedCallback(): void;
-    connectedCallback(): void;
 }
 export default PresentationBody;

@@ -26,6 +26,21 @@ const defineStyles = () => {
                     }
                 },
                 {
+                    selector: 'w-control button',
+                    declarations: {
+                        height: '100%',
+                        color: 'white',
+                        background: `rgba(0, 0, 0, 0.5)`,
+                        fontSize: "16px"
+                    }
+                },
+                {
+                    selector: 'w-control button:focus',
+                    declarations: {
+                        outline: 'none',
+                    }
+                },
+                {
                     selector: 'w-slide',
                     declarations: {
                         display: 'none',
