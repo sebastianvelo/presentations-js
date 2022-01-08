@@ -1,27 +1,48 @@
+interface PresentationBodyState {
+    slideActive?: number;
+}
+
 class PresentationBody extends HTMLElement {
+    private state: PresentationBodyState;
 
-    private modifyChild = (index: number, active: number): void => {
-        const child = this.children.item(index);
-
-        if (index === active)
-            child.setAttribute("active", "true");
-        else
-            child.removeAttribute("active");
-
-        child.addEventListener("click", () => this.modifyChildren(index + 1));
+    static get observedAttributes() {
+        return ["slide"];
     }
 
+    private init = () => {
+        this.setState();
+        this.modifyChildren(this.state.slideActive);
+    }
+
+    private setState = () => {
+        this.state = {
+            slideActive: +this.getAttribute("slide")
+        }
+    };
+
+    private modifyChild = (index: number, slideActive: number): void => {
+        const child = this.children.item(index);
+        if (index === slideActive)
+            child.setAttribute("active", "");
+        else
+            child.removeAttribute("active");
+    };
+
     private modifyChildren = (active: number): void => {
-        [...this.children].forEach((_, i) => {
-            this.modifyChild(i, active);
-        });
-        this.replaceChildren(...this.children);
+        setTimeout(() => {
+            [...this.children].forEach((_, i) => {
+                this.modifyChild(i, active);
+            });
+            this.replaceChildren(...this.children);
+        })
+    };
+
+    attributeChangedCallback() {
+        this.init();
     }
 
     connectedCallback() {
-        setTimeout(() => {
-            this.modifyChildren(0);
-        })
+        this.init();
     }
 }
 

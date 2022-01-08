@@ -7,6 +7,7 @@ import Utils from "../../utils/Utils";
 
 interface PresentationState {
     id: string,
+    active: number,
     style: { [key: string]: string },
     animation: { [key: string]: string },
     transition: { [key: string]: string },
@@ -19,6 +20,7 @@ class Presentation extends HTMLElement {
     private setState = (): void => {
         this.state = {
             id: this.getAttribute("id"),
+            active: 0,
             style: {
                 bg: this.getAttribute(StyleAttributes.Background),
                 width: this.getAttribute(StyleAttributes.Width),
@@ -35,13 +37,9 @@ class Presentation extends HTMLElement {
     }
 
     private getPresentationSelector = (): string => Utils.getIDSelector(this.state.id);
-
     private getSlideSelector = (): string => `${this.getPresentationSelector()} w-slide[active]`;
-
     private getAnimationName = (): string => `${this.state.transition.name}-${this.state.id}`;
-
     private getAnimation = (): string => `${this.getAnimationName()} ${this.state.transition.duration}s`;
-
     private getPresentationStyle = (): WidgetStyleSheet.Rule => ({
         selector: this.getPresentationSelector(),
         declarations: {
@@ -50,7 +48,6 @@ class Presentation extends HTMLElement {
             height: StyleUtils.getValueUnit(this.state.style.height, StyleUnits.PX),
         }
     })
-
     private getSlideStyle = (): WidgetStyleSheet.Rule => (
         {
             selector: this.getSlideSelector(),
@@ -59,7 +56,6 @@ class Presentation extends HTMLElement {
             }
         }
     );
-
     private getKeyframes = (): WidgetStyleSheet.Keyframe[] => [
         {
             name: this.getAnimationName(),
@@ -79,7 +75,6 @@ class Presentation extends HTMLElement {
             ]
         }
     ]
-
     private getStyle = (): string => WidgetStyleSheet.getStyleSheet([
         {
             rules: [
@@ -89,12 +84,45 @@ class Presentation extends HTMLElement {
             keyframes: this.getKeyframes(),
         }
     ]);
-
     private appendStyle = (): void => getRootStyle().append(this.getStyle());
 
+    private getBody = () => this.children[1];
+
+    private getSlidesCount = (): number => this.getBody().children.length - 1;
+
+    private changeSlide = (next: boolean): void => {
+        if (next) {
+            if (this.state.active === this.getSlidesCount())
+                this.state.active = 0;
+            else
+                this.state.active++;
+        } else {
+            if (this.state.active === 0)
+                this.state.active = this.getSlidesCount();
+            else
+                this.state.active--;
+        }
+        this.getBody().setAttribute("slide", `${this.state.active}`);
+    }
+
+    private getControl = (next: boolean) => {
+        const control = document.createElement("w-control");
+        next && control.setAttribute("next", '');
+        !next && control.setAttribute("prev", '');
+        control.addEventListener("click", () => this.changeSlide(next))
+        return control;
+    }
+
+    private setContent = () => {
+        this.replaceChildren(this.getControl(false), ...this.children, this.getControl(true));
+    }
+
     connectedCallback() {
-        this.setState();
-        this.appendStyle();
+        setTimeout(() => {
+            this.setState();
+            this.appendStyle();
+            this.setContent();
+        });
     }
 }
 

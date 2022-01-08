@@ -10,6 +10,11 @@ declare class Presentation extends HTMLElement {
     private getKeyframes;
     private getStyle;
     private appendStyle;
+    private getBody;
+    private getSlidesCount;
+    private changeSlide;
+    private getControl;
+    private setContent;
     connectedCallback(): void;
 }
 export default Presentation;
