@@ -1,11 +1,13 @@
 import Presentation from "../components/presentation/Presentation";
-import Slide from "../components/slide/Slide";
+import Slide from "../components/presentation/body/slide/Slide";
 import Row from "../components/style/row/Row";
+import PresentationBody from "../components/presentation/body/PresentationBody";
 
 const defineElements = () => {
-    window.customElements.define("widget-row", Row);
-    window.customElements.define("widget-presentation", Presentation);
-    window.customElements.define("widget-slide", Slide);
+    window.customElements.define("w-row", Row);
+    window.customElements.define("w-presentation", Presentation);
+    window.customElements.define("w-presentation-body", PresentationBody);
+    window.customElements.define("w-slide", Slide);
 }
 
 export default defineElements;

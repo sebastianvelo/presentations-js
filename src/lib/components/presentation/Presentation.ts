@@ -36,7 +36,7 @@ class Presentation extends HTMLElement {
 
     private getPresentationSelector = (): string => Utils.getIDSelector(this.state.id);
 
-    private getSlideSelector = (): string => `${this.getPresentationSelector()} widget-slide[active]`;
+    private getSlideSelector = (): string => `${this.getPresentationSelector()} w-slide[active]`;
 
     private getAnimationName = (): string => `${this.state.transition.name}-${this.state.id}`;
 
@@ -51,14 +51,14 @@ class Presentation extends HTMLElement {
         }
     })
 
-    private getSlideStyle = (): WidgetStyleSheet.Rule[] => [
+    private getSlideStyle = (): WidgetStyleSheet.Rule => (
         {
             selector: this.getSlideSelector(),
             declarations: {
                 animation: this.getAnimation(),
             }
         }
-    ]
+    );
 
     private getKeyframes = (): WidgetStyleSheet.Keyframe[] => [
         {
@@ -84,7 +84,7 @@ class Presentation extends HTMLElement {
         {
             rules: [
                 this.getPresentationStyle(),
-                ...this.getSlideStyle()
+                this.getSlideStyle()
             ],
             keyframes: this.getKeyframes(),
         }
@@ -92,35 +92,9 @@ class Presentation extends HTMLElement {
 
     private appendStyle = (): void => getRootStyle().append(this.getStyle());
 
-
-    private getCounter = (active: number) => {
-        return `${active + 1}/${this.children.length}`;
-    }
-
-    private modifyChild = (index: number, active: number): void => {
-        const child = this.children.item(index);
-
-        if (index === active)
-            child.setAttribute("active", "true");
-        else
-            child.removeAttribute("active");
-
-        child.addEventListener("click", () => this.modifyChildren(index + 1));
-    }
-
-    private modifyChildren = (active: number): void => {
-        [...this.children].forEach((_, i) => {
-            this.modifyChild(i, active);
-        });
-        this.replaceChildren(...this.children, this.getCounter(active));
-    }
-
     connectedCallback() {
         this.setState();
         this.appendStyle();
-        setTimeout(() => {
-            this.modifyChildren(0);
-        })
     }
 }
 

@@ -10,9 +10,6 @@ declare class Presentation extends HTMLElement {
     private getKeyframes;
     private getStyle;
     private appendStyle;
-    private getCounter;
-    private modifyChild;
-    private modifyChildren;
     connectedCallback(): void;
 }
 export default Presentation;

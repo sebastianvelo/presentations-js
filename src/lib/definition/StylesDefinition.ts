@@ -6,28 +6,37 @@ const defineStyles = () => {
         {
             rules: [
                 {
-                    selector: 'widget-row',
+                    selector: 'w-row',
                     declarations: {
                         display: 'flex'
                     }
                 },
                 {
-                    selector: 'widget-presentation',
+                    selector: 'w-presentation',
                     declarations: {
                         display: 'flex',
                         overflow: 'hidden',
                     }
                 },
                 {
-                    selector: 'widget-slide',
+                    selector: 'w-presentation-body',
+                    declarations: {
+                        width: '100%',
+                        height: '100%',
+                    }
+                },
+                {
+                    selector: 'w-slide',
                     declarations: {
                         display: 'none',
                         position: 'relative',
                         flexDirection: 'column',
+                        width: '100%',
+                        height: '100%',
                     }
                 },
                 {
-                    selector: 'widget-slide[active]',
+                    selector: 'w-slide[active]',
                     declarations: {
                         display: 'flex',
                     }
