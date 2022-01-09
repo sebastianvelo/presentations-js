@@ -1,7 +1,7 @@
 import { appendStyle } from "../shared/RootStyle";
 
 abstract class Widget<T> extends HTMLElement {
-
+    
     protected state: T;
 
     protected abstract setState: () => void;

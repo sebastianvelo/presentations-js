@@ -4,6 +4,7 @@ import StyleUnits from "../../shared/StyleUnits";
 import WidgetStyleSheet from "../../style/WidgetStyleSheet";
 import StyleUtils from "../../utils/StyleUtils";
 import Utils from "../../utils/Utils";
+import Widget from "../../widget/WIdget";
 
 interface StyleableState {
     id?: string;
@@ -21,13 +22,11 @@ interface StyleableState {
     };
 }
 
-abstract class Styleable extends HTMLElement {
+abstract class Styleable extends Widget<StyleableState> {
 
-    private state: StyleableState;
-
-    private setState(): void {
+    protected setState = (): void => {
         this.state = {
-            id: `s-${Utils.generateID()}`,
+            id: `s-salmon`,
             bg: this.getAttribute(StyleAttributes.Background),
             text: this.getAttribute(StyleAttributes.Text),
             size: {
@@ -43,9 +42,7 @@ abstract class Styleable extends HTMLElement {
         }
     }
 
-    private getPosition = (): string => Object.values(this.state.position).filter(p => p).length ? 'absolute' : '';
-
-    private getStyle = () => WidgetStyleSheet.getStyleSheet([
+    protected getStyle = () => ''; /* WidgetStyleSheet.getStyleSheet([
         {
             rules: [
                 {
@@ -64,15 +61,13 @@ abstract class Styleable extends HTMLElement {
                 }
             ],
         }
-    ]);
+    ]);*/
 
-    connectedCallback() {
-        setTimeout(() => {
-            this.setState();
-            appendStyle(this.getStyle());
-            this.setAttribute("id", this.state.id);
-        });
+    protected onInit = () => {
+        this.setAttribute("id", this.state.id);
     }
+
+    private getPosition = (): string => Object.values(this.state.position).filter(p => p).length ? 'absolute' : '';
 
 }
 

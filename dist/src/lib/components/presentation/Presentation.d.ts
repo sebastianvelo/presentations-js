@@ -19,8 +19,9 @@ declare class Presentation extends Widget<PresentationState> {
     protected getStyle: () => string;
     protected setContent: () => void;
     protected onInit: () => void;
+    private autoplay;
     private getBody;
-    private setSlide;
+    private setActiveSlide;
     private getSlidesCount;
     private changeSlide;
     private getControl;

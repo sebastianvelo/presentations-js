@@ -42,7 +42,6 @@ class Presentation extends Widget<PresentationState> {
                 PresentationUtils.getPresentationStyle(this.state),
                 PresentationUtils.getSlideStyle(this.state)
             ],
-            keyframes: PresentationUtils.getKeyframes(this.state),
         }
     ]);
 
@@ -51,19 +50,25 @@ class Presentation extends Widget<PresentationState> {
     }
 
     protected onInit = () => {
+        this.autoplay();
+    }
+
+    private autoplay = () => {
         if (this.state.autoplay)
             setInterval(() => this.changeSlide(true), this.state.autoplay * 1000);
     }
 
     private getBody = () => this.children[1];
-    private setSlide = () => this.getBody().setAttribute("slide", `${this.state.active}`);
+
+    private setActiveSlide = () => this.getBody().children[this.state.active].scrollIntoView({ block: "start", behavior: "smooth" });
+
     private getSlidesCount = (): number => this.getBody().children.length - 1;
 
     private changeSlide = (next: boolean): void => {
         this.state.active = next ?
             PresentationUtils.getNext(this.state, this.getSlidesCount()) :
             PresentationUtils.getPrev(this.state, this.getSlidesCount());
-        this.setSlide();
+        this.setActiveSlide();
     }
 
     private getControl = (next: boolean) => {

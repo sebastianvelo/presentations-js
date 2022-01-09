@@ -15,7 +15,6 @@ const defineStyles = () => {
                     selector: 'w-presentation',
                     declarations: {
                         display: 'flex',
-                        overflow: 'hidden',
                     }
                 },
                 {
@@ -23,15 +22,8 @@ const defineStyles = () => {
                     declarations: {
                         width: '100%',
                         height: '100%',
-                    }
-                },
-                {
-                    selector: 'w-control button',
-                    declarations: {
-                        height: '100%',
-                        color: 'white',
-                        background: `rgba(0, 0, 0, 0.5)`,
-                        fontSize: "16px"
+                        overflow: 'hidden',
+                        display: 'inline-block'
                     }
                 },
                 {
@@ -43,21 +35,49 @@ const defineStyles = () => {
                 {
                     selector: 'w-slide',
                     declarations: {
-                        display: 'none',
+                        display: 'flex',
                         position: 'relative',
                         flexDirection: 'column',
-                        width: '100%',
-                        height: '100%',
-                    }
-                },
-                {
-                    selector: 'w-slide[active]',
-                    declarations: {
-                        display: 'flex',
                     }
                 },
             ],
-        }
+            keyframes: [
+                {
+                    name: 'slide-left',
+                    steps: [
+                        {
+                            selector: "from",
+                            declarations: {
+                                left: '100%'
+                            }
+                        },
+                        {
+                            selector: "to",
+                            declarations: {
+                                left: '0'
+                            }
+                        },
+                    ]
+                },
+                {
+                    name: 'slide-top',
+                    steps: [
+                        {
+                            selector: "from",
+                            declarations: {
+                                top: '100%'
+                            }
+                        },
+                        {
+                            selector: "to",
+                            declarations: {
+                                top: '0'
+                            }
+                        },
+                    ]
+                }
+            ]
+        },
     ]);
 
     document.head.appendChild(style);
